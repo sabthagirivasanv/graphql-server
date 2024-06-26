@@ -1,6 +1,9 @@
 type Query{
     appName: String,
     allProducts: [Product!]!,
+
+    "Get all products based on author name"
+    productsByAuthorName(authorName: String!): [Product!]!,
 }
 
 type Product{

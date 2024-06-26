@@ -45,11 +45,19 @@ const productsData = [
 const resolvers = {
     Query: {
         appName: () => "First GraphQL output",
-        allProducts: () => productsData
+        allProducts: () => {
+            console.log('Query.allProducts');
+            return productsData;
+        },
+        productsByAuthorName: (parent, {authorName}) => {
+            const user = usersData.find(user => user.userName === authorName);
+            return productsData.filter(product => product.authorId === user.id);
+        }
     },
 
     Product: {
         author: (product) => {
+            console.log(`Query.Product.author for "${product.name}"`)
             return usersData.find((each) => each.id === product.authorId);
         }
     }
