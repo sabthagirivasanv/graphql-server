@@ -18,8 +18,9 @@ const productsData = [
         url: 'https://educative.io/',
         numberOfVotes: 10,
         publishedAt: '2021-04-05',
-        // Reference to "ellen"
         authorId: '1',
+        // This product belongs to the "Education" category
+        categoriesIds: ['1']
     },
     {
         name: 'Apollo',
@@ -27,8 +28,9 @@ const productsData = [
         url: 'https://www.apollographql.com/',
         numberOfVotes: 5,
         publishedAt: '2021-01-08',
-        // Reference to "peter"
         authorId: '2',
+        // This product belongs to the "Frameworks" and "API" categories
+        categoriesIds: ['2', '3']
     },
     {
         name: 'OneGraph',
@@ -36,8 +38,27 @@ const productsData = [
         url: 'https://www.onegraph.com',
         numberOfVotes: 5,
         publishedAt: '2020-08-22',
-        // Reference to "ellen"
         authorId: '1',
+        // This product belongs to the "API" category
+        categoriesIds: ['3']
+    },
+]
+
+const categoriesData = [
+    {
+        id: '1',
+        slug: 'education',
+        name: 'Education',
+    },
+    {
+        id: '2',
+        slug: 'frameworks',
+        name: 'Frameworks',
+    },
+    {
+        id: '3',
+        slug: 'api',
+        name: 'API',
     },
 ]
 
@@ -52,6 +73,10 @@ const resolvers = {
         productsByAuthorName: (parent, {authorName}) => {
             const user = usersData.find(user => user.userName === authorName);
             return productsData.filter(product => product.authorId === user.id);
+        },
+        productsByCategory: (_, {slug}) => {
+            const category = categoriesData.find(each => each.slug === slug);
+            return productsData.filter(each => each.categoriesIds.includes(category.id));
         }
     },
 
@@ -59,6 +84,9 @@ const resolvers = {
         author: (product) => {
             console.log(`Query.Product.author for "${product.name}"`)
             return usersData.find((each) => each.id === product.authorId);
+        },
+        categories: (product) => {
+            return categoriesData.filter((each) => product.categoriesIds.includes(each.id));
         }
     }
 }
